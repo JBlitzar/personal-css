@@ -9,6 +9,15 @@ $(document).ready(function () {
     wrap: true,
   });
 
+  editor.commands.addCommand({
+    name: "save",
+    bindKey: { win: "Ctrl-S", mac: "Command-S" },
+    exec: function (editor) {
+      const content = editor.getValue();
+      localStorage.setItem("userCSS", content);
+    },
+  });
+
   // Load saved CSS or default to Skeleton CSS
   const $userCSS = $("#user-css");
   let savedCSS = localStorage.getItem("userCSS");
