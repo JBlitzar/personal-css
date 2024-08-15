@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+$(document).ready(function () {
   const editor = ace.edit("css-editor");
   editor.setTheme("ace/theme/monokai");
   editor.session.setMode("ace/mode/css");
@@ -10,86 +10,77 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Load saved CSS or default to Skeleton CSS
-  const userCSS = document.getElementById("user-css");
+  const $userCSS = $("#user-css");
   let savedCSS = localStorage.getItem("userCSS");
   if (!savedCSS) {
-    savedCSS = `body {
+    savedCSS = `/* CSS */
+body {
     font-family: sans-serif;
 }
 h1 {
-  text-align: center;
+    text-align: center;
 }
-
-
-
-
-
-
-
-
-
-
 `;
   }
 
   setStyle(savedCSS);
 
   // Live update preview
-  editor.session.on("change", () => {
-    userCSS.innerHTML = editor.getValue();
+  editor.session.on("change", function () {
+    $userCSS.html(editor.getValue());
   });
 
-  document.getElementById("save-button").addEventListener("click", async () => {
+  $("#save-button").on("click", function () {
     const content = editor.getValue();
     localStorage.setItem("userCSS", content);
   });
 
-  document
-    .getElementById("export-button")
-    .addEventListener("click", async () => {
-      const content = editor.getValue();
-      localStorage.setItem("userCSS", content);
+  $("#export-button").on("click", async function () {
+    const content = editor.getValue();
+    localStorage.setItem("userCSS", content);
 
-      try {
-        const response = await fetch("https://api.pastes.dev/post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/css",
-            "User-Agent": "Personal-CSS-app",
-          },
-          body: content,
-        });
+    try {
+      const response = await fetch("https://api.pastes.dev/post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/css",
+          "User-Agent": "Personal-CSS-app",
+        },
+        body: content,
+      });
 
-        if (response.ok) {
-          const locationHeader = response.headers.get("Location");
-          const key = locationHeader || (await response.json()).key;
+      if (response.ok) {
+        const locationHeader = response.headers.get("Location");
+        const key = locationHeader || (await response.json()).key;
 
-          document.getElementById(
-            "exportedcss"
-          ).innerText = `<link rel="stylesheet" href="https://api.pastes.dev/${key}"></link>`;
-        } else {
-          throw new Error("Failed to upload CSS");
-        }
-      } catch (error) {
-        alert("Error saving CSS: " + error.message);
+        $("#exportedcss").text(
+          `<link rel="stylesheet" href="https://api.pastes.dev/${key}"></link>`
+        );
+      } else {
+        throw new Error("Failed to upload CSS");
       }
-    });
+    } catch (error) {
+      alert("Error saving CSS: " + error.message);
+    }
+  });
+
   function setStyle(css) {
     editor.setValue(css, -1);
-    userCSS.innerHTML = css;
+    $("#user-css").html(css);
   }
-  document.getElementById("import-button").addEventListener("click", () => {
+
+  $("#import-button").on("click", function () {
     function extractUrl(text) {
       // Regular expression pattern to extract URLs from HTML attributes
       const urlPattern = /(?:href|src)="(https?:\/\/[^\s"<>]+)/g;
-      const urls = [];
       let match;
 
       while ((match = urlPattern.exec(text)) !== null) {
         return match[1];
       }
     }
-    const url = extractUrl(document.getElementById("stylesheet-url").value);
+
+    const url = extractUrl($("#stylesheet-url").val());
     if (url) {
       fetch(url)
         .then((response) => {
