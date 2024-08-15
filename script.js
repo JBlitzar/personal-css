@@ -1,3 +1,37 @@
+function digestName(hashAlgorithm) {
+  switch (hashAlgorithm) {
+    case "sha256":
+      return "SHA-256";
+    case "sha384":
+      return "SHA-384";
+    case "sha512":
+      return "SHA-512";
+    default:
+      return "SHA-384";
+  }
+}
+
+async function hashText(buffer, algorithm) {
+  const digest = await crypto.subtle.digest(digestName(algorithm), buffer);
+
+  return digest;
+}
+async function integrityMetadata(buffer, algorithm) {
+  const hashBuffer = await hashText(buffer, algorithm);
+  const base64string = btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
+
+  return `${algorithm}-${base64string}`;
+}
+
+async function integrityURL(url) {
+  const response = await fetch(url);
+  const buffer = await response.arrayBuffer();
+  const hashAlgorithm = "SHA-384";
+  const integrity = await integrityMetadata(buffer, hashAlgorithm);
+
+  return `integrity="${integrity}" crossorigin="anonymous"`;
+}
+
 $(document).ready(function () {
   const editor = ace.edit("css-editor");
   editor.setTheme("ace/theme/monokai");
@@ -52,9 +86,10 @@ h1 {
       if (response.ok) {
         const locationHeader = response.headers.get("Location");
         const key = locationHeader || (await response.json()).key;
-
+        const url = `https://api.pastes.dev/${key}`;
+        const integrity = await integrityURL(url);
         $("#exportedcss").text(
-          `<link rel="stylesheet" href="https://api.pastes.dev/${key}"></link>`
+          `<link rel="stylesheet" href="https://api.pastes.dev/${key}" ${integrity}></link>`
         );
       } else {
         throw new Error("Failed to upload CSS");
