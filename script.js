@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let savedCSS = localStorage.getItem("userCSS");
   if (!savedCSS) {
     savedCSS = `body {
-    font-family: serif;
+    font-family: sans-serif;
 }
 h1 {
   text-align: center;
