@@ -198,7 +198,7 @@
       <h3>Form Example</h3>
       <form action="#">
         <fieldset>
-          <legend>Personalia:</legend>
+          <legend>Fieldset:</legend>
           <label for="fname">First name:</label><br />
           <input type="text" id="fname" name="fname" value="John" /><br />
           <label for="lname">Last name:</label><br />
@@ -219,13 +219,22 @@
           <input type="radio" name="radioGroup" value="radio3" /> Radio 3
         </label>
         <br /><br />
-        <label for="select1">Here is an input box: </label>
+        <label for="select1">Selections </label>
         <select name="select1">
           <option value="asdf">Hello</option>
           <option value="fff">123</option>
           <option value="dddd">Apple</option>
           <option value="ssss">Banana</option>
         </select>
+        <input list="edl" name="edl" />
+        <datalist id="edl">
+          <option value="Lorem"></option>
+          <option value="Ipsum"></option>
+          <option value="Dolor"></option>
+          <option value="Sit"></option>
+          <option value="Amet"></option>
+        </datalist>
+
         <br />
         <label for="text1">Here is an input box: </label>
         <input type="text" name="text1" placeholder="Enter text here" />
