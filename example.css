@@ -35,6 +35,10 @@ select {
   margin: 8px 0;
   display: inline-block;
   border: 1px solid var(--text-color);
+  background-color: var(--bg-white);
+  color: var(--text-color);
+  font-family: "Helvetica", sans-serif;
+
   border-radius: 4px;
   box-sizing: border-box;
 }
@@ -54,8 +58,7 @@ select {
   padding: 40px;
 }
 
-input,
-select {
+input {
   font-family: "Helvetica", sans-serif;
   color: var(--text-color);
   background-color: var(--bg-white);
