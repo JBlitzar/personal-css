@@ -54,7 +54,8 @@ select {
   padding: 40px;
 }
 
-input {
+input,
+select {
   font-family: "Helvetica", sans-serif;
   color: var(--text-color);
   background-color: var(--bg-white);
@@ -113,6 +114,9 @@ tbody td:hover {
   background-color: var(--bg-white);
 }
 
+form {
+  width: 80%;
+}
 button,
 input[type="submit"] {
   display: inline-block;
